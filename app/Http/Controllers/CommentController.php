@@ -11,7 +11,7 @@ use Illuminate\Validation\Rule;
 class CommentController extends Controller
 {
     public function blogComments(Request $request) {
-        return Comment::where("blog_id", $request->blog_id)->where("reply_to", null)->with('owner')->with('reply')->get();
+        return Comment::where("blog_id", $request->blog_id)->where("reply_to", null)->with(['owner', 'reply'])->get();
     }
 
     public function postComment(Request $request) {
