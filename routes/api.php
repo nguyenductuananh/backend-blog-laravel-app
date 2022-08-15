@@ -1,9 +1,10 @@
 <?php
 
+use App\Http\Controllers\CommentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-
+use App\Http\Controllers\BlogController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -20,9 +21,7 @@ Route::get("/logout", [AuthController::class, 'logout']);
 
 
 Route::middleware("auth")->group(function () {
-    Route::get("/user", function () {
-        return auth()->user();
-    });
+    Route::get("/user",[AuthController::class, 'userInformation']);
 });
 
 Route::group(['middleware' => ['auth', 'role-check:' . \App\Enums\Role::ADMIN], 'prefix' => '/admin'], function () {
@@ -35,3 +34,8 @@ Route::group(['middleware' => ['auth', 'role-check:' . \App\Enums\Role::USER], '
         return "You're logging an user account !!!";
     });
 });
+
+Route::resource('/blog', BlogController::class);
+
+Route::get('/comments/{blog_id}', [CommentController::class ,'blogComments']);
+Route::post('/comments/{blog_id}', [CommentController::class ,'postComment']);
