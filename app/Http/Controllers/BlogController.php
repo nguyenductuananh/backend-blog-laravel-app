@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\HttpStatusCode;
 use App\Models\Blog;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -13,7 +13,8 @@ class BlogController extends Controller
 
     public function index(Request $request)
     {
-        return Blog::search($request->query())->orderBy("create_at")->with('author')->paginate($this->PER_PAGE)->items();
+        $data = Blog::search($request->query())->orderBy("create_at")->with('author')->paginate($this->PER_PAGE)->items();
+        return $this->formatJson($data);
     }
 
     public function show(Request $request)
@@ -22,7 +23,7 @@ class BlogController extends Controller
         for ($idx = 0; $idx < count($blog->categories); $idx++) {
             $blog->categories[$idx] = $blog->categories[$idx]->title;
         }
-        return $blog;
+        return $this->formatJson($blog);
     }
 
     public function store(Request $request): array
@@ -39,23 +40,28 @@ class BlogController extends Controller
         $blog->account_id = auth()->user()->id;
         $blog->save();
         $blog->categories()->attach($request->post("categories"));
-        return ['message' => 'Add Successfully!'];
+        return $this->formatJson(['message' => 'Add Successfully!']);
+
     }
 
     public function update(Request $request, Blog $blog)
     {
+        if ($blog->account_id !== auth()->user()->id) {
+            return $this->formatJson(['message' => "Forbidden"], HttpStatusCode::FORBIDDEN);
+        }
+        $filteredDuplicateCategories = array_unique($request->post('categories'));
         $validated = $request->validate([
             'content' => 'required',
             'title' => 'required',
-            'categories' => 'required|array',
-            'blog_id' => ['required', 'numeric', Rule::exists('blog', 'id')->where("id", $blog->id)]
+            'categories' => ['required', 'array', Rule::exists('category', 'id',)->where("account_id", auth()->user()->id)->whereIn('id', $filteredDuplicateCategories)],
+            'blog_id' => ['required', 'numeric', Rule::exists('blog', 'id')->where("id", $blog->id)->where('account_id', auth()->user()->id)]
         ]);
 
         $blog->content = $validated['content'];
-        $blog->title=$validated['title'];
+        $blog->title = $validated['title'];
         $blog->save();
-        $blog->categories()->detach();
-        $blog->categories()->attach($validated['categories']);
-        return ['message' => 'Update successfully!'];
+        $blog->categories()->sync($filteredDuplicateCategories);
+        return $this->formatJson(['message' => 'Update successfully!']);
+
     }
 }
