@@ -19,7 +19,7 @@ class BlogController extends Controller
 
     public function show(Request $request)
     {
-        $blog = Blog::where('id', $request->blog)->with(['author', 'categories'])->get()->first();
+        $blog = Blog::where('id', $request->blog)->with(['author', 'categories'])->selectRaw("blog.*, avg(rate) as avgRate")->leftJoin('rate', 'rate.blog_id', '=', 'blog.id')->groupBy("id")->get()->first();
         for ($idx = 0; $idx < count($blog->categories); $idx++) {
             $blog->categories[$idx] = $blog->categories[$idx]->title;
         }

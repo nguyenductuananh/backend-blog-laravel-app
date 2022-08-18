@@ -67,6 +67,6 @@ class Blog extends Model
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(Category::class, 'blog_category', 'blog_id', 'category_id', 'id', 'id')->distinct();
-
     }
+
 }
