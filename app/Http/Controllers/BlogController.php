@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\HttpStatusCode;
+use App\Jobs\LogQueryTime;
 use App\Models\Blog;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -23,6 +24,8 @@ class BlogController extends Controller
         for ($idx = 0; $idx < count($blog->categories); $idx++) {
             $blog->categories[$idx] = $blog->categories[$idx]->title;
         }
+        dispatch(new LogQueryTime($request->path(), auth()->user()->id));
+
         return $this->formatJson($blog);
     }
 
