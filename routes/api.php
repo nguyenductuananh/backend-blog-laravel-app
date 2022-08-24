@@ -1,10 +1,12 @@
 <?php
 
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\NotificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -21,7 +23,7 @@ Route::get("/logout", [AuthController::class, 'logout']);
 
 
 Route::middleware("auth")->group(function () {
-    Route::get("/user",[AuthController::class, 'userInformation']);
+    Route::get("/user", [AuthController::class, 'userInformation']);
 });
 
 Route::group(['middleware' => ['auth', 'role-check:' . \App\Enums\Role::ADMIN], 'prefix' => '/admin'], function () {
@@ -35,12 +37,20 @@ Route::group(['middleware' => ['auth', 'role-check:' . \App\Enums\Role::USER], '
     });
 });
 
-Route::resource('/blog', BlogController::class)->middleware('auth');
-Route::resource('/category', \App\Http\Controllers\CategoryController::class)->middleware('auth');
-Route::post('/vote/{comment}', [\App\Http\Controllers\VoteController::class, 'makeVote'])->middleware('auth');
-Route::delete('/vote/{comment}', [\App\Http\Controllers\VoteController::class, 'removeVote'])->middleware('auth');Route::post('/vote/{comment}', [\App\Http\Controllers\VoteController::class, 'makeVote'])->middleware('auth');
-Route::post('/rate/{blog}', [\App\Http\Controllers\RateController::class, 'makeRate'])->middleware('auth');
-Route::delete('/rate/{blog}', [\App\Http\Controllers\RateController::class, 'removeRate'])->middleware('auth');
+Route::group(['middleware' => 'auth', 'prefix' => '/'], function () {
 
-Route::get('/comments/{blog_id}', [CommentController::class ,'blogComments'])->where('blog_id', '[0-9]+');;
-Route::post('/comments/{blog_id}', [CommentController::class ,'postComment'])->where('blog_id', '[0-9]+');
+    Route::resource('/blog', BlogController::class)->middleware('auth');
+    Route::resource('/category', \App\Http\Controllers\CategoryController::class);
+
+    Route::post('/vote/{comment}', [\App\Http\Controllers\VoteController::class, 'makeVote']);
+    Route::delete('/vote/{comment}', [\App\Http\Controllers\VoteController::class, 'removeVote']);
+
+    Route::post('/rate/{blog}', [\App\Http\Controllers\RateController::class, 'makeRate']);
+    Route::delete('/rate/{blog}', [\App\Http\Controllers\RateController::class, 'removeRate']);
+
+    Route::get('/comments/{blog_id}', [CommentController::class, 'blogComments'])->where('blog_id', '[0-9]+');
+    Route::post('/comments/{blog_id}', [CommentController::class, 'postComment'])->where('blog_id', '[0-9]+');
+
+    Route::get('/notifications', [NotificationController::class, 'index'])->where('blog_id', '[0-9]+');
+    Route::post('/notifications', [NotificationController::class, 'store'])->where('blog_id', '[0-9]+');
+});

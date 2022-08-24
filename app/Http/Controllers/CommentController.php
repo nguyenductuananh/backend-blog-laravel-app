@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Enums\HttpStatusCode;
+use App\Enums\NotificationType;
+use App\Jobs\CreateNotificationJob;
 use App\Models\Blog;
 use App\Models\Comment;
 use Illuminate\Http\Request;
@@ -33,6 +35,8 @@ class CommentController extends Controller
             return $this->formatJson($validator->getMessageBag(), HttpStatusCode::UNPROCESSABLE_ENTITY);
         }
         $comment = array_merge(['create_at' => now(), 'account_id' => auth()->user()->id], $validator->safe()->all());
+
+        CreateNotificationJob::dispatch(['account_id' => auth()->user()->id, 'notification_type' => NotificationType::COMMENT, 'comment_id' => $comment['blog_id']])->delay(now()->addMinute(1));
 
         Comment::create($comment);
         return $this->formatJson(['message' => "Success"]);

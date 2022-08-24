@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Enums\HttpStatusCode;
+use App\Enums\NotificationType;
+use App\Jobs\CreateNotificationJob;
 use App\Models\Comment;
 use App\Models\Vote;
 use Exception;
@@ -22,6 +24,7 @@ class VoteController extends Controller
         $vote->create_at = now();
         try {
             $vote->saveOrFail();
+            CreateNotificationJob::dispatch(['account_id' => auth()->user()->id, 'notification_type' => NotificationType::VOTE, 'comment_id' => $vote->comment_id])->delay(now()->addMinute(1));
             return $this->formatJson($vote);
         } catch (Exception $exception) {
             return $this->formatJson(['message' => "Can't create vote for this comment"], HttpStatusCode::INTERNAL_SERVER_ERROR);
