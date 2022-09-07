@@ -13,6 +13,6 @@ class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     public function formatJson($data = [], $statusCode = HttpStatusCode::SUCCESS) {
-        return response()->json(['data' => $data, 'statusCode' => $statusCode], $statusCode);
+        return ['data' => $data, 'statusCode' => $statusCode] ;
     }
 }

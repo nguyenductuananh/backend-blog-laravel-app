@@ -25,7 +25,6 @@ class CommentController extends Controller
         } catch (\Exception $exception) {
             return $this->formatJson(['message' => "Blog isn't exist"]);
         }
-//        dd( Rule::exists('comment', 'reply_to')->where("id" , $request->post('reply_to'))->whereNotNull('reply_to'));
         $validator = Validator::make($request->all(), [
             'blog_id' => 'required|numeric',
             'content' => 'required',
