@@ -14,6 +14,6 @@ class Category extends Model
     use HasFactory;
     protected $table = 'category';
     protected $fillable = ['title', 'account_id'];
-    protected $hidden=['pivot'];
+    protected $hidden = ['pivot'];
     public $timestamps = false;
 }

@@ -26,10 +26,10 @@ class Authenticate extends Middleware
     {
         $acceptHeader = $request->header('Accept');
         if ($acceptHeader != 'application/json') {
-            return response()->json(["message" => "Bad request"], HttpStatusCode::BAD_REQUEST);
+            return response()->json(response_format_data(__('response-message.bad-request'), HttpStatusCode::BAD_REQUEST), HttpStatusCode::BAD_REQUEST);
         }
         if (!Auth::check()) {
-            return response()->json(["message" => 'Authentication fails'], HttpStatusCode::FORBIDDEN);
+            return response()->json(response_format_data(__("response-message.auth-fail"), HttpStatusCode::FORBIDDEN), HttpStatusCode::FORBIDDEN);
         }
         return $next($request);
     }

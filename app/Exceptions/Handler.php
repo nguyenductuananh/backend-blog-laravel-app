@@ -2,7 +2,9 @@
 
 namespace App\Exceptions;
 
+use App\Enums\HttpStatusCode;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Facades\Validator;
 use Throwable;
 
 class Handler extends ExceptionHandler

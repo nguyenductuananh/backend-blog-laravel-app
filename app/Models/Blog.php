@@ -51,7 +51,6 @@ class Blog extends Model
         }
 
         if (isset($filter['startDate'])) {
-
             $query->whereDate("create_at", ">=", date('Y-m-d', strtotime($filter['startDate'])));
             unset($filter['startDate']);
         }
@@ -68,5 +67,10 @@ class Blog extends Model
     {
         return $this->belongsToMany(Category::class, 'blog_category', 'blog_id', 'category_id', 'id', 'id')->distinct();
     }
-
+    public function scopeAvgRate($query)
+    {
+        return $query->selectRaw("blog.*, avg(rate) as avgRate")
+            ->leftJoin("rate", "rate.blog_id", "=", "blog.id")
+            ->groupBy("id");
+    }
 }

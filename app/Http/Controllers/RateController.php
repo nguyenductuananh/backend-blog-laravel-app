@@ -4,21 +4,26 @@ namespace App\Http\Controllers;
 
 use App\Enums\HttpStatusCode;
 use App\Enums\NotificationType;
+use App\Http\Requests\RatePostRequest;
 use App\Jobs\CreateNotificationJob;
 use App\Models\Blog;
 use App\Models\Rate;
+use App\Services\RateService;
 use GuzzleHttp\Promise\Create;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 class RateController extends Controller
+
 {
-    public function makeRate(Request $request, Blog $blog)
+    public function __construct(RateService $service)
     {
-        $validated = $request->validate([
-            'rate' => "required|numeric|max:5|min:0",
-            'blog_id' => ['required', 'numeric', Rule::in([$blog->id])],
-        ]);
+        parent::__construct($service);
+    }
+
+    public function makeRate(RatePostRequest $request, Blog $blog)
+    {
+        $request->validated();
         $rated = Rate::where('account_id', auth()->user()->id)->where('blog_id', $request->post('blog_id'))->get();
         if ($rated->count()) {
             return $this->formatJson(['message' => "Rated, can't add more"], HttpStatusCode::UNPROCESSABLE_ENTITY);

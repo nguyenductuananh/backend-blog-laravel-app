@@ -2,25 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
-use Illuminate\Http\Request;
+use App\Enums\HttpStatusCode;
+use App\Http\Requests\CategoryRequest;
+use App\Services\CategoryService;
+use Illuminate\Database\Eloquent\Collection;
 
 class CategoryController extends Controller
 {
-
-    public function index() : object {
-        return Category::where('account_id', auth()->user()->id)->orWhere('account_id', null)->get();
+    public function __construct(CategoryService $service)
+    {
+        parent::__construct($service);
     }
-    public function store(Request $request) : Category {
-        $validated = $request->validate([
-            'title' => 'required'
-        ]);
-
-        $category = new Category();
-        $category->title = $validated['title'];
-        $category->account_id = auth()->user()->id;
-        $category->save();
-
-        return $category;
+    public function index(): Collection
+    {
+        return $this->service->getOwnCategories();
+    }
+    public function store(CategoryRequest $request)
+    {
+        $validated = $request->validated();
+        $this->service->store($validated);
+        return $this->formatJson(__('response-message.do-success', ['action' => 'Add']), HttpStatusCode::CREATED);
     }
 }

@@ -2,21 +2,14 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\HttpStatusCode;
+use App\Exceptions\ValidationFailException;
+use Illuminate\Contracts\Validation\Validator as ValidationValidator;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class BlogRequest extends FormRequest
+class BlogRequest extends BaseRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return true;
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -29,10 +22,9 @@ class BlogRequest extends FormRequest
             ->get()
             ->toArray();
         $value_only_categories = array_map(
-            fn($val) => (string) $val["id"],
+            fn ($val) => (string) $val["id"],
             $default_categories
         );
-
         return [
             'account_id' => 'sometimes|digits:' . auth()->user()->id,
             "content" => "required",
@@ -46,9 +38,15 @@ class BlogRequest extends FormRequest
                 "sometimes",
                 "numeric",
                 Rule::exists("blog", "id")
-                    ->where("id", $this->id)
+                    ->where("id", $this->post('blog_id'))
                     ->where("account_id", auth()->user()->id),
+                Rule::in([(int) $this->blog])
             ],
         ];
+    }
+
+    public function messages()
+    {
+        return ['blog_id.in' => "The :attribute isn't match.", 'blog_id.exists' => "The :attribute is forbbiden."];
     }
 }

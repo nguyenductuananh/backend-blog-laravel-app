@@ -12,7 +12,20 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    public function formatJson($data = [], $statusCode = HttpStatusCode::SUCCESS) {
-        return ['data' => $data, 'statusCode' => $statusCode] ;
+    protected $service;
+
+    public function __construct($service)
+    {
+        $this->service = $service;
+    }
+
+    public function getService()
+    {
+        return $this->service;
+    }
+
+    public function formatJson($data = [], $statusCode = HttpStatusCode::SUCCESS)
+    {
+        return response_format_data($data, $statusCode);
     }
 }
