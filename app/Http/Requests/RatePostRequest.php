@@ -15,7 +15,7 @@ class RatePostRequest extends BaseRequest
     {
         return [
             'rate' => "required|numeric|max:5|min:0",
-            'blog_id' => ['required', 'numeric', Rule::in([$this->blog_id]), Rule::exists('blog', 'id')->where("id", $this->blog)],
+            'blog_id' => ['required', 'numeric', Rule::in([$this->blog])],
         ];
     }
 

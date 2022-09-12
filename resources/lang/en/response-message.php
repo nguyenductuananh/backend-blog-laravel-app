@@ -8,4 +8,6 @@ return [
     'do-success' => ":action Successfully",
     'internal-error' => "Internal Error",
     'success' => "Successfully",
+    'cant-create-vote' => "Can't create vote for this comment",
+    'fail' => "Fail"
 ];

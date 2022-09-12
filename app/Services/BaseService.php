@@ -50,10 +50,10 @@ class BaseService
         $filledDataModel = new $this->model($withTimeStamp);
         try {
             $filledDataModel->saveOrFail();
+            return $filledDataModel;
         } catch (\Throwable $t) {
             throw (new InternalErrorException($t));
         }
-        return $filledDataModel;
     }
     public function update(int $id, array $updateField)
     {

@@ -26,6 +26,6 @@ class Controller extends BaseController
 
     public function formatJson($data = [], $statusCode = HttpStatusCode::SUCCESS)
     {
-        return response_format_data($data, $statusCode);
+        return response()->json(response_format_data($data, $statusCode), $statusCode);
     }
 }
