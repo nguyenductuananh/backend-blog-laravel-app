@@ -9,11 +9,11 @@ class InternalErrorException extends Exception
 {
     public function __construct($previous = null)
     {
-        $message =  __('response-message.internal-error');
+        $message = __('response-message.internal-error');
         $code = HttpStatusCode::INTERNAL_SERVER_ERROR;
         parent::__construct($message, $code, $previous);
     }
-
+    
     public function render()
     {
         $responseMessage = ['message' => $this->message];
@@ -21,6 +21,6 @@ class InternalErrorException extends Exception
         if ($_ENV["APP_DEBUG"]) {
             $responseMessage['errors'] = $this->getPrevious()->getMessage();
         }
-        return response()->json(response_format_data($responseMessage,  $responseCode, true), $responseCode);
+        return response()->json(response_format_data($responseMessage, $responseCode, true), $responseCode);
     }
 }

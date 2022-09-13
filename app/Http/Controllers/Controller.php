@@ -24,7 +24,7 @@ class Controller extends BaseController
         return $this->service;
     }
 
-    public function formatJson($data = [], $statusCode = HttpStatusCode::SUCCESS)
+    public function formatJson($data = [], $statusCode = HttpStatusCode::SUCCESS): \Illuminate\Http\JsonResponse
     {
         return response()->json(response_format_data($data, $statusCode), $statusCode);
     }

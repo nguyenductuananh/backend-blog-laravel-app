@@ -7,7 +7,6 @@ use App\Models\Blog;
 
 class BlogService extends BaseService
 {
-
     public function __construct(Blog $model)
     {
         parent::__construct($model);
@@ -39,7 +38,8 @@ class BlogService extends BaseService
         }
         return $blog;
     }
-    public function storeBlog(array $data)
+
+    public function storeBlog($data)
     {
         $savedModel = $this->store($data);
         $savedModel->categories()->attach($data['categories']);

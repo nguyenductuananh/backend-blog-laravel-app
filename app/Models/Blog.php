@@ -19,10 +19,10 @@ class Blog extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
     protected $table = 'blog';
     protected $hidden = ['account_id'];
     protected $fillable = ['content', 'account_id', 'title', 'create_at'];
-    public $timestamps = false;
 
     public function comments(): HasMany
     {
@@ -67,6 +67,7 @@ class Blog extends Model
     {
         return $this->belongsToMany(Category::class, 'blog_category', 'blog_id', 'category_id', 'id', 'id')->distinct();
     }
+
     public function scopeAvgRate($query)
     {
         return $query->selectRaw("blog.*, avg(rate) as avgRate")

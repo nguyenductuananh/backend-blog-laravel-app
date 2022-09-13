@@ -13,23 +13,24 @@ class BlogController extends Controller
     {
         $this->service = $service;
     }
+
     public function index(Request $request)
     {
-        $searchResult = $this->service->index($request->query());
+        $searchResult = $this->service->execute('index', $request->query(), 'name');
         return $this->formatJson($searchResult);
     }
 
     public function show(Request $request)
     {
-        $blog = $this->service->getBlog($request->blog);
+        $blog = $this->service->execute('getBlog', $request->blog);
         return $this->formatJson($blog);
     }
 
-    public function store(BlogRequest $request): array
+    public function store(BlogRequest $request)
     {
         $validated = $request->validated();
-        $this->service->storeBlog($validated);
-        return $this->formatJson(response_format_data(__("response-message.do-success", ['action' => 'Add']), HttpStatusCode::CREATED));
+        $this->service->storeBlog($validated->toArray());
+        return $this->formatJson(__("response-message.do-success", ['action' => 'Add']), HttpStatusCode::CREATED);
     }
 
     public function update(BlogRequest $request)

@@ -11,7 +11,7 @@ class VoteService extends BaseService
         parent::__construct($model);
     }
 
-    public function storeVote($comment_id)
+    public function storeVote($comment_id): bool
     {
         $existVote = $this->model::where("account_id", auth()->user()->id)->where("comment_id", $comment_id)->get()->toArray();
 
@@ -21,7 +21,8 @@ class VoteService extends BaseService
             return boolval($this->store(['comment_id' => (int)$comment_id]));
         }
     }
-    public function removeVote($comment_id)
+
+    public function removeVote($comment_id): bool
     {
         $this->model::where("account_id", auth()->user()->id)->where("comment_id", $comment_id)->delete();
         return true;

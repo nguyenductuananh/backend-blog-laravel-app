@@ -2,11 +2,10 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\HttpStatusCode;
-use App\Exceptions\ValidationFailException;
-use Illuminate\Contracts\Validation\Validator as ValidationValidator;
+use App\DTO\BlogDTO;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Validation\Rule;
-use Illuminate\Foundation\Http\FormRequest;
+use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
 class BlogRequest extends BaseRequest
 {
@@ -15,14 +14,11 @@ class BlogRequest extends BaseRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
-        $default_categories = \App\Models\Category::whereNull("account_id")->orWhere("account_id", auth()->user()->id)
-            ->select("id")
-            ->get()
-            ->toArray();
+        $default_categories = \App\Models\Category::whereNull("account_id")->orWhere("account_id", auth()->user()->id)->select("id")->get()->toArray();
         $value_only_categories = array_map(
-            fn ($val) => (string) $val["id"],
+            fn($val) => (string)$val["id"],
             $default_categories
         );
         return [
@@ -37,16 +33,23 @@ class BlogRequest extends BaseRequest
             "blog_id" => [
                 "sometimes",
                 "numeric",
-                Rule::exists("blog", "id")
-                    ->where("id", $this->post('blog_id'))
-                    ->where("account_id", auth()->user()->id),
-                Rule::in([(int) $this->blog])
+                Rule::exists("blog", "id")->where("id", $this->post('blog_id'))->where("account_id", auth()->user()->id),
+                Rule::in([(int)$this->blog])
             ],
         ];
     }
 
-    public function messages()
+    /**
+     * @throws UnknownProperties
+     */
+    public function validated()
     {
-        return ['blog_id.in' => "The :attribute isn't match.", 'blog_id.exists' => "The :attribute is forbbiden."];
+        $validated = parent::validated();
+        return new BlogDTO($validated);
+    }
+
+    public function messages(): array
+    {
+        return ['blog_id.in' => "The :attribute isn't match.", 'blog_id.exists' => "The :attribute is forbidden."];
     }
 }
