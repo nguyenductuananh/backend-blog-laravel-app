@@ -18,7 +18,7 @@ class BlogRequest extends BaseRequest
     {
         $default_categories = \App\Models\Category::whereNull("account_id")->orWhere("account_id", auth()->user()->id)->select("id")->get()->toArray();
         $value_only_categories = array_map(
-            fn($val) => (string)$val["id"],
+            fn ($val) => (string)$val["id"],
             $default_categories
         );
         return [
@@ -45,6 +45,7 @@ class BlogRequest extends BaseRequest
     public function validated()
     {
         $validated = parent::validated();
+        $validated['id'] = $validated['blog_id'];
         return new BlogDTO($validated);
     }
 

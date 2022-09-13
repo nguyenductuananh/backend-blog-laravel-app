@@ -13,14 +13,15 @@ class CategoryController extends Controller
     {
         parent::__construct($service);
     }
-    public function index(): Collection
+    public function index()
     {
-        return $this->service->getOwnCategories();
+        return $this->formatJson($this->service->execute('getOwnCategories'), HttpStatusCode::SUCCESS);
     }
     public function store(CategoryRequest $request)
     {
         $validated = $request->validated();
-        $this->service->store($validated);
-        return $this->formatJson(__('response-message.do-success', ['action' => 'Add']), HttpStatusCode::CREATED);
+        if ($this->service->executed("store", $validated)) {
+            return $this->formatJson(__('response-message.do-success', ['action' => 'Add']), HttpStatusCode::CREATED);
+        }
     }
 }

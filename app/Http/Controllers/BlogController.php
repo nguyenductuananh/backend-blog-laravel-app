@@ -29,14 +29,16 @@ class BlogController extends Controller
     public function store(BlogRequest $request)
     {
         $validated = $request->validated();
-        $this->service->storeBlog($validated->toArray());
-        return $this->formatJson(__("response-message.do-success", ['action' => 'Add']), HttpStatusCode::CREATED);
+        if ($this->service->executed('storeBlog', (array) $validated)) {
+            return $this->formatJson(__("response-message.do-success", ['action' => 'Add']), HttpStatusCode::CREATED);
+        }
     }
 
     public function update(BlogRequest $request)
     {
         $validated = $request->validated();
-        $this->service->updateBlog($validated);
-        return $this->formatJson(["message" => __("response-message.do-success", ['action' => "Update"]), HttpStatusCode::CREATED]);
+        if ($this->service->execute('updateBlog', array_merge($validated->toArray(), ['account_id' => auth()->user()->id]))) {
+            return $this->formatJson(__("response-message.do-success", ['action' => "Update"]), HttpStatusCode::CREATED);
+        }
     }
 }

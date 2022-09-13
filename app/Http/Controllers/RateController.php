@@ -21,7 +21,7 @@ class RateController extends Controller
     public function makeRate(RatePostRequest $request,)
     {
         $validated =  $request->validated();
-        $isSave = $this->service->storeRate($validated);
+        $isSave = $this->service->executed('storeRate', $validated);
         if (!$isSave) {
             return $this->formatJson("Rated, can't add more", HttpStatusCode::UNPROCESSABLE_ENTITY);
         }
@@ -32,7 +32,7 @@ class RateController extends Controller
     public function removeRate(RateRemoveRequest $request)
     {
         $validate = $request->validated();
-        if ($this->service->deleteRate($validate['blog_id'])) {
+        if ($this->service->executed("deleteRate", $validate['blog_id'])) {
             return $this->formatJson(__("response-message.do-success", ['action' => "Delete Rate"]), HttpStatusCode::SUCCESS);
         }
     }

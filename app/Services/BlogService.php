@@ -43,17 +43,17 @@ class BlogService extends BaseService
     {
         $savedModel = $this->store($data);
         $savedModel->categories()->attach($data['categories']);
+        return $savedModel;
     }
 
     public function updateBlog($data)
     {
-        $categories = $data['categories'];
+        $categories = [...$data['categories']];
         unset($data['categories']);
-        $id = $data['blog_id'];
-        unset($data['blog_id']);
-        $updatedModel = $this->update($id, $data);
+        $updatedModel = $this->update($data['id'], $data);
         if (count($categories) && is_array($categories)) {
             $updatedModel->categories()->sync(array_unique($categories));
         }
+        return true;
     }
 }

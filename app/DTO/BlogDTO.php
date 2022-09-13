@@ -6,6 +6,7 @@ use Spatie\DataTransferObject\DataTransferObject;
 
 class BlogDTO extends DataTransferObject
 {
+
     public ?int $id;
 
     public ?string $content;

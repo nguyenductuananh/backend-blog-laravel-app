@@ -87,11 +87,7 @@ abstract class BaseService
         foreach ($updateField as $fieldName => $fieldValue) {
             $needUpdateModel[$fieldName] = $fieldValue;
         }
-        try {
-            $needUpdateModel->saveOrFail();
-            return $needUpdateModel;
-        } catch (\Throwable $th) {
-            throw (new InternalErrorException($th));
-        }
+        $needUpdateModel->saveOrFail();
+        return $needUpdateModel;
     }
 }

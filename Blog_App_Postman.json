@@ -1,0 +1,587 @@
+{
+	"info": {
+		"_postman_id": "e812dfc7-2d89-4dae-b766-5c3e13dbc59b",
+		"name": "Localhost Env",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"pm.environment.set(\"auth_token\", response.data.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "nguyenductuananh",
+									"type": "default"
+								},
+								{
+									"key": "password",
+									"value": "12345",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{LOCAL_ENV_URL}}/login",
+							"host": [
+								"{{LOCAL_ENV_URL}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{LOCAL_ENV_URL}}/logout",
+							"host": [
+								"{{LOCAL_ENV_URL}}"
+							],
+							"path": [
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Blog",
+			"item": [
+				{
+					"name": "Index",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{LOCAL_ENV_URL}}/blog/",
+							"host": [
+								"{{LOCAL_ENV_URL}}"
+							],
+							"path": [
+								"blog",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get one",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{LOCAL_ENV_URL}}/blog/309",
+							"host": [
+								"{{LOCAL_ENV_URL}}"
+							],
+							"path": [
+								"blog",
+								"309"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Store",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "title",
+									"value": "This is a demo blog",
+									"type": "default"
+								},
+								{
+									"key": "content",
+									"value": "Hot new, first blog made by NDTA. It's a best news today after a long time you don't see him.",
+									"type": "default"
+								},
+								{
+									"key": "categories[]",
+									"value": "1",
+									"type": "default"
+								},
+								{
+									"key": "categories[]",
+									"value": "5",
+									"type": "default",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{LOCAL_ENV_URL}}/blog",
+							"host": [
+								"{{LOCAL_ENV_URL}}"
+							],
+							"path": [
+								"blog"
+							],
+							"query": [
+								{
+									"key": "content",
+									"value": "Nguyen Duc Tuan Anh",
+									"disabled": true
+								},
+								{
+									"key": "title",
+									"value": "This is a demo blog",
+									"disabled": true
+								},
+								{
+									"key": "categories",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "content",
+									"value": "Nothing change here",
+									"type": "default"
+								},
+								{
+									"key": "title",
+									"value": "NDTA Title",
+									"type": "default"
+								},
+								{
+									"key": "categories[]",
+									"value": "1",
+									"type": "default"
+								},
+								{
+									"key": "categories[]",
+									"value": "2",
+									"type": "default"
+								},
+								{
+									"key": "blog_id",
+									"value": "312",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{LOCAL_ENV_URL}}/blog/312",
+							"host": [
+								"{{LOCAL_ENV_URL}}"
+							],
+							"path": [
+								"blog",
+								"312"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Category",
+			"item": [
+				{
+					"name": "Index",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{LOCAL_ENV_URL}}/category",
+							"host": [
+								"{{LOCAL_ENV_URL}}"
+							],
+							"path": [
+								"category"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "a",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Store",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "title",
+									"value": "Food",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{LOCAL_ENV_URL}}/category",
+							"host": [
+								"{{LOCAL_ENV_URL}}"
+							],
+							"path": [
+								"category"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Comment",
+			"item": [
+				{
+					"name": "Blog's Comments",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{LOCAL_ENV_URL}}/comments/308",
+							"host": [
+								"{{LOCAL_ENV_URL}}"
+							],
+							"path": [
+								"comments",
+								"308"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Store comment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "blog_id",
+									"value": "311",
+									"type": "default"
+								},
+								{
+									"key": "content",
+									"value": "Comment to get notificaiton <3",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{LOCAL_ENV_URL}}/comments/311",
+							"host": [
+								"{{LOCAL_ENV_URL}}"
+							],
+							"path": [
+								"comments",
+								"311"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Rate",
+			"item": [
+				{
+					"name": "Store",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "rate",
+									"value": "5",
+									"type": "default"
+								},
+								{
+									"key": "blog_id",
+									"value": "309",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{LOCAL_ENV_URL}}/rate/309",
+							"host": [
+								"{{LOCAL_ENV_URL}}"
+							],
+							"path": [
+								"rate",
+								"309"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "blog_id",
+									"value": "309",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{LOCAL_ENV_URL}}/rate/309",
+							"host": [
+								"{{LOCAL_ENV_URL}}"
+							],
+							"path": [
+								"rate",
+								"309"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Vote",
+			"item": [
+				{
+					"name": "Store",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "comment_id",
+									"value": "10",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{LOCAL_ENV_URL}}/vote/10",
+							"host": [
+								"{{LOCAL_ENV_URL}}"
+							],
+							"path": [
+								"vote",
+								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "comment_id",
+									"value": "10",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{LOCAL_ENV_URL}}/vote/10",
+							"host": [
+								"{{LOCAL_ENV_URL}}"
+							],
+							"path": [
+								"vote",
+								"10"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{auth_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "auth_token",
+			"value": ""
+		}
+	]
+}

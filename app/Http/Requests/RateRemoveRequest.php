@@ -14,7 +14,7 @@ class RateRemoveRequest extends BaseRequest
     public function rules()
     {
         return [
-            'blog_id' => ['required', 'numeric', Rule::in([$this->post('blog_id')]), Rule::exists('rate', 'blog_id')->where('account_id', auth()->user()->id)->where('blog_id', $this->post("blog_id"))]
+            'blog_id' => ['required', 'numeric', Rule::in([$this->blog]), Rule::exists('rate', 'blog_id')->where('account_id', auth()->user()->id)->where('blog_id', $this->post("blog_id"))]
         ];
     }
 }

@@ -17,13 +17,13 @@ class CommentController extends Controller
     }
     public function blogComments(Request $request)
     {
-        return $this->formatJson($this->service->getBlogComments($request->blog));
+        return $this->formatJson($this->service->execute('getBlogComments', $request->blog));
     }
 
     public function postComment(CommentRequest $request)
     {
         $validated = $request->validated();
-        $createdComment = $this->service->store($validated);
+        $createdComment = $this->service->execute('store', $validated);
         CreateNotificationJob::dispatch(['account_id' => auth()->user()->id, 'notification_type' => NotificationType::COMMENT, 'comment_id' => $createdComment->id])->delay(now()->addMinute(1));
         return $this->formatJson(__('response-message.do-success', ['action' => "Add"]), HttpStatusCode::CREATED);
     }
