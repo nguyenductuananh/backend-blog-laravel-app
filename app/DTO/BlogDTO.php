@@ -2,6 +2,7 @@
 
 namespace App\DTO;
 
+use DateTime;
 use Spatie\DataTransferObject\DataTransferObject;
 
 class BlogDTO extends DataTransferObject
@@ -15,7 +16,7 @@ class BlogDTO extends DataTransferObject
 
     public ?string $title;
 
-    public ?\DateTime $create_at;
+    public ?DateTime $create_at;
 
     public ?array $categories;
 }

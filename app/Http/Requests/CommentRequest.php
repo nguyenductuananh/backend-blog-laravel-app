@@ -14,7 +14,7 @@ class CommentRequest extends BaseRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             'blog_id' => ['required', 'numeric', Rule::exists('blog', 'id')->where('id', $this->blog_id), Rule::in([$this->blog_id])],
@@ -26,7 +26,7 @@ class CommentRequest extends BaseRequest
     /**
      * Message when validate fails
      */
-    public function messages()
+    public function messages(): array
     {
         return [
             'blog_id.exists' => "The :attribute isn't exist.",

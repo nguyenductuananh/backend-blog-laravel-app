@@ -6,6 +6,7 @@ use App\Enums\HttpStatusCode;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller as BaseController;
 
 class Controller extends BaseController
@@ -24,7 +25,7 @@ class Controller extends BaseController
         return $this->service;
     }
 
-    public function formatJson($data = [], $statusCode = HttpStatusCode::SUCCESS): \Illuminate\Http\JsonResponse
+    public function formatJson($data = [], $statusCode = HttpStatusCode::SUCCESS): JsonResponse
     {
         return response()->json(response_format_data($data, $statusCode), $statusCode);
     }

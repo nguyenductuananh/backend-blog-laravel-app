@@ -3,12 +3,18 @@
 namespace App\Http\Requests;
 
 use App\DTO\BlogDTO;
-use Illuminate\Contracts\Validation\Validator;
+use App\Models\Category;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
 class BlogRequest extends BaseRequest
 {
+    public function authorize()
+    {
+        return DB::table("blog")->where("id", $this->post('blog_id'))->where("account_id", auth()->user()->id)->get()->count();
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -16,9 +22,9 @@ class BlogRequest extends BaseRequest
      */
     public function rules(): array
     {
-        $default_categories = \App\Models\Category::whereNull("account_id")->orWhere("account_id", auth()->user()->id)->select("id")->get()->toArray();
+        $default_categories = Category::whereNull("account_id")->orWhere("account_id", auth()->user()->id)->select("id")->get()->toArray();
         $value_only_categories = array_map(
-            fn ($val) => (string)$val["id"],
+            fn($val) => (string)$val["id"],
             $default_categories
         );
         return [
@@ -33,7 +39,6 @@ class BlogRequest extends BaseRequest
             "blog_id" => [
                 "sometimes",
                 "numeric",
-                Rule::exists("blog", "id")->where("id", $this->post('blog_id'))->where("account_id", auth()->user()->id),
                 Rule::in([(int)$this->blog])
             ],
         ];
@@ -45,7 +50,7 @@ class BlogRequest extends BaseRequest
     public function validated()
     {
         $validated = parent::validated();
-        $validated['id'] = $validated['blog_id'];
+        $validated['id'] = array_column_default($validated, 'blog_id', null);
         return new BlogDTO($validated);
     }
 

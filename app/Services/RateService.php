@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Enums\HttpStatusCode;
 use App\Exceptions\InternalErrorException;
 use App\Models\Rate;
+use Throwable;
 
 class RateService extends BaseService
 {
@@ -23,7 +24,7 @@ class RateService extends BaseService
         try {
             $this->store($store_data);
             return true;
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             throw new InternalErrorException($th);
         }
     }
@@ -33,7 +34,7 @@ class RateService extends BaseService
         try {
             $this->model::where('account_id', auth()->user()->id)->where("blog_id", $blog_id)->delete();
             return true;
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             throw new InternalErrorException($th);
         }
     }

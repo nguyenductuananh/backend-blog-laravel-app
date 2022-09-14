@@ -5,7 +5,9 @@ namespace App\Services;
 use App\Enums\HttpStatusCode;
 use App\Exceptions\InternalErrorException;
 use App\Exceptions\NotFoundException;
+use ErrorException;
 use Exception;
+use Throwable;
 
 
 abstract class BaseService
@@ -21,7 +23,7 @@ abstract class BaseService
     {
         try {
             return $this->$functionName(...$args);
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             throw new InternalErrorException($throwable);
         }
     }
@@ -30,7 +32,7 @@ abstract class BaseService
     {
         try {
             return boolval($this->$functionName(...$args));
-        } catch (\Throwable $t) {
+        } catch (Throwable $t) {
             throw new InternalErrorException($t);
         }
     }
@@ -46,7 +48,7 @@ abstract class BaseService
     }
 
     /**
-     * @throws \ErrorException
+     * @throws ErrorException
      */
     function getOne(...$args)
     {
@@ -73,7 +75,7 @@ abstract class BaseService
         try {
             $filledDataModel->saveOrFail();
             return $filledDataModel;
-        } catch (\Throwable $t) {
+        } catch (Throwable $t) {
             throw (new InternalErrorException($t));
         }
     }
@@ -83,7 +85,8 @@ abstract class BaseService
         if (empty($id) || gettype($id) !== 'integer') {
             throw (new NotFoundException());
         }
-        $needUpdateModel = $this->model::find($id);
+
+        $needUpdateModel = $this->model->find($id);
         foreach ($updateField as $fieldName => $fieldValue) {
             $needUpdateModel[$fieldName] = $fieldValue;
         }
