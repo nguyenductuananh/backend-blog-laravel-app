@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Exceptions\NotFoundException;
 use App\Models\Blog;
+use Illuminate\Support\Facades\Storage;
 
 class BlogService extends BaseService
 {
@@ -55,5 +56,18 @@ class BlogService extends BaseService
             $updatedModel->categories()->sync(array_unique($categories));
         }
         return $updatedModel;
+    }
+
+    public function uploadImageBlog($file)
+    {
+        $publicUploadFolder =  '/upload/images/';
+        $fileName = 'Yukine_' . date_format(now(), 'Ymdhis') . "." . pathinfo($file->getClientOriginalName(), PATHINFO_EXTENSION);
+        $publicStorage = Storage::build([
+            'driver' => 'local',
+            'root' => public_path(),
+        ]);
+        if ($publicStorage->put($publicUploadFolder . $fileName, file_get_contents($file))) {
+            return  $publicUploadFolder . $fileName;
+        }
     }
 }

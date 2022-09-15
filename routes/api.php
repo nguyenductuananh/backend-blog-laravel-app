@@ -45,7 +45,7 @@ Route::group(['middleware' => 'auth', 'prefix' => '/'], function () {
 
     Route::resource('/blog', BlogController::class)->middleware('auth');
     Route::resource('/category', CategoryController::class);
-
+    Route::post("/blog/image", [BlogController::class, 'uploadImage']);
     Route::post('/vote/{comment}', [VoteController::class, 'makeVote']);
     Route::delete('/vote/{comment}', [VoteController::class, 'removeVote']);
 
