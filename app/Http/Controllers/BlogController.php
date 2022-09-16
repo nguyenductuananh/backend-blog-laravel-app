@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\HttpStatusCode;
 use Illuminate\Http\Request;
 use App\Http\Requests\BlogRequest;
+use App\Http\Requests\UploadBlogImageRequest;
 use App\Services\BlogService;
 
 class BlogController extends Controller
@@ -39,6 +40,15 @@ class BlogController extends Controller
         $validated = $request->validated();
         if ($this->service->execute('updateBlog', array_merge($validated->toArray(), ['account_id' => auth()->user()->id]))) {
             return $this->formatJson(__("response-message.do-success", ['action' => "Update"]), HttpStatusCode::CREATED);
+        }
+    }
+
+    public function uploadImage(UploadBlogImageRequest $request)
+    {
+        $file = $request->validated();
+        $filePath = $this->service->execute("uploadImageBlog", $file['image']);
+        if ($filePath) {
+            return $this->formatJson(['filePath' => $filePath], HttpStatusCode::SUCCESS);
         }
     }
 }

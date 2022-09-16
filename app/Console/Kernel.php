@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('command:maintenance')->everyMinute();
+        $schedule->command("command:scan-trash-image")->weekdays();
     }
 
     /**
