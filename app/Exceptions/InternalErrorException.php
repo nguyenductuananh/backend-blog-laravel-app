@@ -9,11 +9,13 @@ class InternalErrorException extends Exception
 {
     public function __construct($previous = null)
     {
-        $message = __('response-message.internal-error');
-        $code = HttpStatusCode::INTERNAL_SERVER_ERROR;
+        if ($previous) {
+            $message = $previous->message ?: __('response-message.internal-error');
+            $code = $previous->code ?: HttpStatusCode::INTERNAL_SERVER_ERROR;
+        }
         parent::__construct($message, $code, $previous);
     }
-    
+
     public function render()
     {
         $responseMessage = ['message' => $this->message];

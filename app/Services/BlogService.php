@@ -15,7 +15,7 @@ class BlogService extends BaseService
 
     public function index(array $queryParam)
     {
-        $data = $this->model::search($queryParam)
+        $data = $this->model->search($queryParam)
             ->orderBy("create_at")
             ->with("author")
             ->paginate(PAGINATION_PER_PAGE)
@@ -32,11 +32,9 @@ class BlogService extends BaseService
             ->first();
         if (empty($blog)) {
             throw (new NotFoundException());
+            return false;
         }
-        $blog->categories = empty($blog->categories) ? [] : $blog->categories;
-        for ($idx = 0; $idx < count($blog->categories); $idx++) {
-            $blog->categories[$idx] = $blog->categories[$idx]->title;
-        }
+        $blog->categories = $blog->categories->plunk("title");
         return $blog;
     }
 

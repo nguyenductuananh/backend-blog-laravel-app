@@ -17,7 +17,8 @@ class BlogController extends Controller
 
     public function index(Request $request)
     {
-        $searchResult = $this->service->execute('index', $request->query(), 'name');
+        $searchResult = $this->service->execute('index', $request->query());
+
         return $this->formatJson($searchResult);
     }
 

@@ -36,31 +36,34 @@ class Blog extends Model
 
     public function scopeSearch($query, $pureFilter)
     {
-        $filter = array_filter($pureFilter, function ($key) {
-            $filter_only = ['id', 'account_id', 'content', 'title', 'startDate', 'endDate'];
-            return array_search($key, $filter_only) !== -1;
-        }, ARRAY_FILTER_USE_KEY);
+        $filter_only = ['id', 'account_id', 'content', 'title', 'startDate', 'endDate'];
+        $filter = array_only($pureFilter, $filter_only);
 
-        if (isset($filter['id'])) {
-            $query->where("id", $filter['id']);
-            unset($filter['id']);
+        foreach (array_only($filter, ['id', 'account_id']) as $key => $value) {
+            if ($value) {
+                $query->where($key, $value);
+            }
         }
+
         if (isset($filter['account_id'])) {
             $query->where("account_id", $filter['account_id']);
-            unset($filter['account_id']);
         }
 
         if (isset($filter['startDate'])) {
-            $query->whereDate("create_at", ">=", date('Y-m-d', strtotime($filter['startDate'])));
-            unset($filter['startDate']);
+            $query->whereDate("create_at", ">=", convertStringToDateTime($filter['startDate']));
         }
+
         if (isset($filter['endDate'])) {
-            $query->whereDate("create_at", "<=", date('Y-m-d', strtotime($filter['endDate'])));
-            unset($filter['endDate']);
+            $query->whereDate("create_at", "<=", convertStringToDateTime($filter['endDate']));
         }
+
+        $filter = array_except($filter, ['id', 'account_id', 'startDate', 'endDate']);
+
         foreach ($filter as $key => $value) {
             $query->where($key, 'LIKE', '%' . $value . '%');
         }
+
+        return $query;
     }
 
     public function categories(): BelongsToMany

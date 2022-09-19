@@ -20,11 +20,19 @@ function array_except($array, ...$args): array
         } else {
             $flatArray = array_merge($flatArray, $value);
         }
-
     }
     return array_diff_key($array, array_flip($flatArray));
 }
 
-
-
-
+function array_only(array $array, ...$args)
+{
+    $flatArray = [];
+    foreach ($args as $value) {
+        if (gettype($value) !== 'array') {
+            $flatArray[] = $value;
+        } else {
+            $flatArray = array_merge($flatArray, $value);
+        }
+    }
+    return array_intersect_key($array, array_flip($flatArray));
+}

@@ -16,6 +16,7 @@ class AppServiceProvider extends ServiceProvider
     {
         //Helper init
         require_once base_path() . '/app/Utils/arrayHelpers.php';
+        require_once base_path() . '/app/Utils/datetimeHelpers.php';
         require_once base_path() . '/app/Utils/responseHelpers.php';
     }
 
@@ -31,7 +32,7 @@ class AppServiceProvider extends ServiceProvider
             $line = '[' . now() . ']' . PHP_EOL;
             $line .= $query->sql . PHP_EOL . PHP_EOL;
             $line .= '________________________________________________' . PHP_EOL;
-            file_put_contents(storage_path('logs/query.log'), $line, FILE_APPEND);
+            file_put_contents(storage_path('logs/query_' . date_format(now(), 'Y-d-m') . '.log'), $line, FILE_APPEND);
         });
     }
 }
